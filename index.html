@@ -83,6 +83,20 @@
   .carta-visual img{width:100%; height:100%; object-fit:cover; display:block;}
   .carta-estado{font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--violet);
     font-weight:700; margin-top:6px;}
+  form.pedido label{display:block; font-size:13px; font-weight:700; color:var(--violet-deep); margin:14px 0 5px;}
+  form.pedido input, form.pedido select, form.pedido textarea{
+    width:100%; padding:10px 12px; border-radius:8px; border:1.5px solid var(--border);
+    font-family:inherit; font-size:14px; color:var(--text); background:#fff;}
+  form.pedido textarea{resize:vertical; min-height:70px;}
+  form.pedido .check-line{display:flex; align-items:flex-start; gap:8px; margin-top:16px; font-size:12.5px; color:var(--text-dim);}
+  form.pedido .check-line input{width:auto; margin-top:3px;}
+  form.pedido .check-line a{color:var(--violet-deep);}
+  form.pedido button{margin-top:18px;}
+  .legal-box{font-size:13px; color:var(--text-dim); line-height:1.7;}
+  .legal-box h3{color:var(--violet-deep); font-size:16px; margin:22px 0 8px;}
+  .legal-box p{margin:0 0 8px;}
+  .legal-disclaimer{font-size:11.5px; background:#f7f2ff; border:1px solid var(--border); border-radius:10px;
+    padding:12px 14px; margin-bottom:20px; color:var(--text-dim);}
 </style>
 </head>
 <body>
@@ -99,6 +113,7 @@
   <a href="#tirada">Tirada al Azar</a>
   <a href="#banos">Baños Rituales</a>
   <a href="#fechas">Rituales por Fecha</a>
+  <a href="#pedido">Hacer un Pedido</a>
   <a href="#agendar">Agendar Lectura</a>
 </nav>
 
@@ -235,6 +250,60 @@
         </ol>
       </div>
 
+    </div>
+  </section>
+
+  <section id="pedido">
+    <h2>📝 Hacer un Pedido</h2>
+    <div class="divider">✦ ⋆ ✦</div>
+    <div class="card">
+      <p class="desc" style="margin-bottom:0;">Completá tus datos y te contactamos por WhatsApp o email para coordinar el pago y la entrega.</p>
+      <form class="pedido" action="https://formspree.io/f/PEGAR_TU_ID_DE_FORMSPREE" method="POST">
+        <label for="f-nombre">Nombre</label>
+        <input id="f-nombre" name="nombre" type="text" required>
+
+        <label for="f-contacto">WhatsApp o email de contacto</label>
+        <input id="f-contacto" name="contacto" type="text" required>
+
+        <label for="f-producto">¿Qué querés pedir?</label>
+        <select id="f-producto" name="producto" required>
+          <option value="">Elegí una opción</option>
+          <option>Lectura de Tarot</option>
+          <option>E-book</option>
+          <option>Kit de Baño Ritual</option>
+          <option>Vela Intencionada</option>
+          <option>Otro</option>
+        </select>
+
+        <label for="f-mensaje">Contanos un poco más (opcional)</label>
+        <textarea id="f-mensaje" name="mensaje"></textarea>
+
+        <div class="check-line">
+          <input id="f-acepto" type="checkbox" required>
+          <label for="f-acepto" style="display:inline; font-weight:400; margin:0;">
+            Acepto los <a href="#legal">Términos y Condiciones y la Política de Privacidad</a>.
+          </label>
+        </div>
+
+        <button class="btn" type="submit">Enviar Pedido</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="legal">
+    <h2>📄 Términos y Privacidad</h2>
+    <div class="divider">✦ ⋆ ✦</div>
+    <div class="card legal-box">
+      <p class="legal-disclaimer">Este texto es una guía general para tu emprendimiento y no reemplaza el asesoramiento de un abogado. Si querés asegurarte el cumplimiento total de la normativa vigente en Argentina, te recomendamos hacerlo revisar por un profesional.</p>
+
+      <h3>Términos y Condiciones</h3>
+      <p>Tarot con Romi ofrece lecturas de tarot, e-books y productos rituales (baños, velas) con fines orientativos y de acompañamiento personal. No reemplazan el asesoramiento médico, psicológico, legal ni financiero profesional.</p>
+      <p>Los pagos se coordinan por WhatsApp o Mercado Pago. Los productos digitales (e-books) se entregan por email o WhatsApp una vez confirmado el pago, y al ser de entrega inmediata no admiten reembolso salvo error atribuible a Tarot con Romi.</p>
+      <p>Los precios pueden actualizarse sin previo aviso. El uso de este sitio implica la aceptación de estos términos.</p>
+
+      <h3>Política de Privacidad</h3>
+      <p>Al completar el formulario de pedido, recopilamos tu nombre, un medio de contacto (WhatsApp o email) y el detalle de tu consulta. Estos datos se usan exclusivamente para contactarte y coordinar la entrega del producto o servicio solicitado — nunca se comparten con terceros ni se usan con fines publicitarios.</p>
+      <p>De acuerdo a la Ley de Protección de Datos Personales N° 25.326 de Argentina, podés solicitar en cualquier momento la consulta, actualización o eliminación de tus datos escribiendo por WhatsApp.</p>
     </div>
   </section>
 
