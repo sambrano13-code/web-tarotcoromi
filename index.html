@@ -77,12 +77,10 @@
   #resultado-tirada.reveal{animation:cardReveal .5s cubic-bezier(.175,.885,.32,1.275);}
   @keyframes cardReveal{from{opacity:0; transform:scale(.85) translateY(14px);} to{opacity:1; transform:scale(1) translateY(0);}}
   .carta-visual{width:150px; height:230px; margin:0 auto 14px; border-radius:14px;
-    background:linear-gradient(160deg,#f2ecff,#e4d6fb); border:2px solid var(--violet);
-    display:flex; flex-direction:column; align-items:center; justify-content:space-between;
-    padding:12px 6px; box-shadow:0 6px 20px #8a5cf633; transition:transform .5s ease;}
+    overflow:hidden; border:2px solid var(--violet);
+    box-shadow:0 6px 20px #8a5cf633; transition:transform .5s ease;}
   .carta-visual.invertida{transform:rotate(180deg);}
-  .carta-numeral{font-family:'Cinzel',serif; font-size:12px; color:var(--violet-deep); font-weight:700;}
-  .carta-simbolo{font-size:54px; line-height:1;}
+  .carta-visual img{width:100%; height:100%; object-fit:cover; display:block;}
   .carta-estado{font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--violet);
     font-weight:700; margin-top:6px;}
 </style>
@@ -119,9 +117,7 @@
     </div>
     <div id="resultado-tirada" class="card" style="display:none;">
       <div id="carta-visual" class="carta-visual">
-        <div id="carta-numeral" class="carta-numeral"></div>
-        <div id="carta-simbolo" class="carta-simbolo"></div>
-        <div id="carta-numeral2" class="carta-numeral"></div>
+        <img id="carta-img" src="" alt="">
       </div>
       <h3 id="carta-nombre"></h3>
       <div id="carta-estado" class="carta-estado"></div>
@@ -258,109 +254,110 @@
 
 <script>
 const CARTAS_TIRADA = [
-  {n:"0", nombre:"El Loco", simbolo:"🤹",
+  {n:"0", nombre:"El Loco", img:"cartas del tarot/0_el_loco.jpg.png", simbolo:"🤹",
     amor:{d:"Un amor espontáneo se acerca, animate a dar el paso.", i:"Miedo a comprometerte o decisiones apresuradas en el amor."},
     riqueza:{d:"Nuevas oportunidades económicas, pero evaluá bien el riesgo.", i:"Gastos impulsivos, pensalo bien antes de decidir."},
     vida:{d:"Un comienzo nuevo y lleno de aventura te espera.", i:"Dudas sobre qué camino tomar, evitá actuar sin pensar."}},
-  {n:"I", nombre:"El Mago", simbolo:"🪄",
+  {n:"I", nombre:"El Mago", img:"cartas del tarot/1_el_mago.jpg.jpg", simbolo:"🪄",
     amor:{d:"Tenés el poder de conquistar lo que buscás.", i:"Falta de confianza o alguien que no es sincero en sus intenciones."},
     riqueza:{d:"Tenés las herramientas para generar ingresos, usalas.", i:"Oportunidad desaprovechada por falta de confianza."},
     vida:{d:"Es momento de manifestar tus metas con acción.", i:"Talento desaprovechado, es momento de animarte a actuar."}},
-  {n:"II", nombre:"La Sacerdotisa", simbolo:"🌙",
+  {n:"II", nombre:"La Sacerdotisa", img:"cartas del tarot/2_La_sacerdotiza.png", simbolo:"🌙",
     amor:{d:"Escuchá tu intuición antes de dar el próximo paso.", i:"Secretos o silencios que están afectando el vínculo."},
     riqueza:{d:"No todo lo que brilla es oportunidad real, investigá.", i:"Cuidado con inversiones poco claras, investigá más."},
     vida:{d:"Las respuestas están en tu interior, confiá en vos.", i:"Desconexión con vos misma, es momento de frenar y escucharte."}},
-  {n:"III", nombre:"La Emperatriz", simbolo:"🌸",
+  {n:"III", nombre:"La Emperatriz", img:"cartas del tarot/3_la_emperatriz.jpg.png", simbolo:"🌸",
     amor:{d:"Amor abundante y romántico en esta etapa.", i:"Dependencia emocional o falta de cuidado propio en la relación."},
     riqueza:{d:"Abundancia y crecimiento económico en camino.", i:"Gastos por ansiedad, cuidá tus recursos."},
     vida:{d:"Etapa fértil de crecimiento personal y creatividad.", i:"Bloqueos creativos, cuesta arrancar proyectos nuevos."}},
-  {n:"IV", nombre:"El Emperador", simbolo:"👑",
+  {n:"IV", nombre:"El Emperador", img:"cartas del tarot/4_el_emperador.jpg.png", simbolo:"👑",
     amor:{d:"Relación estable con compromiso firme.", i:"Rigidez o control excesivo que está afectando el vínculo."},
     riqueza:{d:"Buen momento para organizar tus finanzas.", i:"Desorden financiero, poné límites y organizate."},
     vida:{d:"Estabilidad y orden llegan a tu vida.", i:"Desorganización o pérdida de control en tus planes."}},
-  {n:"V", nombre:"El Hierofante", simbolo:"📿",
+  {n:"V", nombre:"El Hierofante", img:"cartas del tarot/5_el_hierofante.jpg.png", simbolo:"📿",
     amor:{d:"Relación guiada por valores compartidos.", i:"Diferencias de valores o normas que no encajan en la pareja."},
     riqueza:{d:"Un consejo financiero externo te va a ayudar.", i:"Consejo financiero que no te sirve, confiá en tu criterio."},
     vida:{d:"Una guía o mentor aparece en tu camino.", i:"Es momento de romper con lo establecido y buscar tu propio camino."}},
-  {n:"VI", nombre:"Los Enamorados", simbolo:"💞",
+  {n:"VI", nombre:"Los Enamorados", img:"cartas del tarot/6_los_enamorados.jpg.png", simbolo:"💞",
     amor:{d:"Una decisión importante del corazón se acerca.", i:"Desacuerdos o una elección difícil que estás postergando."},
     riqueza:{d:"Una sociedad o acuerdo económico está por definirse.", i:"Un acuerdo económico se complica, revisá los detalles."},
     vida:{d:"Una elección importante marcará tu rumbo.", i:"Confusión entre dos caminos, tomate tu tiempo para decidir."}},
-  {n:"VII", nombre:"El Carro", simbolo:"🏇",
+  {n:"VII", nombre:"El Carro", img:"cartas del tarot/7_el_carro.jpg.png", simbolo:"🏇",
     amor:{d:"Avanzás con fuerza hacia lo que buscás.", i:"Falta de dirección en la relación, sensación de ir para atrás."},
     riqueza:{d:"Vas a superar obstáculos económicos con determinación.", i:"Obstáculos económicos que generan frustración."},
     vida:{d:"Avanzás con fuerza hacia tus objetivos.", i:"Sensación de estancamiento, revisá qué te está frenando."}},
-  {n:"VIII", nombre:"La Fuerza", simbolo:"🦁",
+  {n:"VIII", nombre:"La Fuerza", img:"cartas del tarot/8_la_fuerza.jpg.png", simbolo:"🦁",
     amor:{d:"Paciencia y calma fortalecen el vínculo.", i:"Inseguridad o impulsividad que está afectando el vínculo."},
     riqueza:{d:"Constancia y paciencia traen resultados económicos.", i:"Impulsividad con el dinero, frená antes de gastar."},
     vida:{d:"Tenés la fuerza interior para este momento.", i:"Dudas y debilidad, necesitás recuperar la confianza en vos."}},
-  {n:"IX", nombre:"El Ermitaño", simbolo:"🏮",
+  {n:"IX", nombre:"El Ermitaño", img:"cartas del tarot/9_el_ermitaño.jpg.png", simbolo:"🏮",
     amor:{d:"Necesitás tiempo a solas antes de un paso importante.", i:"Aislamiento excesivo que te aleja de quien te quiere cerca."},
     riqueza:{d:"Revisá bien tus gastos antes de decidir.", i:"Aislarte no te va a ayudar a resolver lo económico."},
     vida:{d:"La introspección te va a dar respuestas.", i:"Soledad mal llevada, buscá apoyo en tu entorno."}},
-  {n:"X", nombre:"La Rueda de la Fortuna", simbolo:"🎡",
+  {n:"X", nombre:"La Rueda de la Fortuna", img:"cartas del tarot/10_la_rueda_de_la_fortuna.jpg.png", simbolo:"🎡",
     amor:{d:"Un giro de suerte favorable se acerca.", i:"Mala racha temporal, los ciclos siempre cambian."},
     riqueza:{d:"Un golpe de suerte económico está en camino.", i:"Racha económica difícil, es pasajera."},
     vida:{d:"Cambios positivos e inesperados vienen en camino.", i:"Resistencia al cambio, dejá que las cosas fluyan."}},
-  {n:"XI", nombre:"La Justicia", simbolo:"⚖️",
+  {n:"XI", nombre:"La Justicia", img:"cartas del tarot/11_la_justicia.jpg.png", simbolo:"⚖️",
     amor:{d:"Relación basada en equilibrio y verdad.", i:"Desequilibrio o falta de honestidad en la pareja."},
     riqueza:{d:"Decisiones financieras justas y claras ahora.", i:"Un trato injusto o desequilibrado en lo económico."},
     vida:{d:"El equilibrio y la verdad guían tu camino.", i:"Injusticia o parcialidad que te está afectando."}},
-  {n:"XII", nombre:"El Colgado", simbolo:"🙃",
+  {n:"XII", nombre:"El Colgado", img:"cartas del tarot/12_el_colgado.jpg.png", simbolo:"🙃",
     amor:{d:"Una pausa te da otra perspectiva del vínculo.", i:"Sacrificio inútil, no te quedes esperando sin sentido."},
     riqueza:{d:"Frená antes de gastar, esperá el momento justo.", i:"Gastar en algo que no vale la espera."},
     vida:{d:"Una pausa necesaria trae una nueva mirada.", i:"Estancamiento por resistirte a soltar el control."}},
-  {n:"XIII", nombre:"La Muerte", simbolo:"🦋",
+  {n:"XIII", nombre:"La Muerte", img:"cartas del tarot/13_la_muerte.jpg.png", simbolo:"🦋",
     amor:{d:"Cierre de una etapa da paso a algo nuevo.", i:"Resistencia a cerrar un ciclo que ya no te hace bien."},
     riqueza:{d:"Un cambio de rumbo económico te va a beneficiar.", i:"Resistencia a cerrar un gasto o hábito que ya no sirve."},
     vida:{d:"Una transformación profunda te va a cambiar para bien.", i:"Miedo al cambio que te mantiene estancada."}},
-  {n:"XIV", nombre:"La Templanza", simbolo:"🕊️",
+  {n:"XIV", nombre:"La Templanza", img:"cartas del tarot/14_la_templanza.jpg.jpg", simbolo:"🕊️",
     amor:{d:"Armonía y paciencia fortalecen la relación.", i:"Excesos o desequilibrios que generan roces en la pareja."},
     riqueza:{d:"Moderación en gastos trae estabilidad.", i:"Desequilibrio en gastos, buscá moderación."},
     vida:{d:"Equilibrio y paz acompañan este momento.", i:"Desequilibrio interior, buscá calma antes de decidir."}},
-  {n:"XV", nombre:"El Diablo", simbolo:"🔥",
+  {n:"XV", nombre:"El Diablo", img:"cartas del tarot/15_el_diablo.jpg.jpg", simbolo:"🔥",
     amor:{d:"Pasión intensa, cuidado con ataduras poco sanas.", i:"Buen momento para soltar vínculos tóxicos y liberarte."},
     riqueza:{d:"Cuidado con gastos o deudas impulsivas.", i:"Deudas o vicios de consumo que conviene soltar."},
     vida:{d:"Revisá qué ataduras te están frenando.", i:"Estás lista para romper cadenas y liberarte de lo que te frena."}},
-  {n:"XVI", nombre:"La Torre", simbolo:"🌩️",
+  {n:"XVI", nombre:"La Torre", img:"cartas del tarot/16_la_torre.pjg.jpg", simbolo:"🌩️",
     amor:{d:"Un cambio abrupto trae claridad a la relación.", i:"Evitaste por poco una ruptura o un conflicto mayor."},
     riqueza:{d:"Un imprevisto económico, pero trae aprendizaje.", i:"Un imprevisto económico que en el fondo te libera."},
     vida:{d:"Una revelación inesperada cambia tu perspectiva.", i:"Miedo al colapso que en realidad te va a liberar."}},
-  {n:"XVII", nombre:"La Estrella", simbolo:"⭐",
+  {n:"XVII", nombre:"La Estrella", img:"cartas del tarot/17_la_estrella.jpg.png", simbolo:"⭐",
     amor:{d:"Esperanza renovada en el amor.", i:"Pérdida temporal de la ilusión, no pierdas la fe."},
     riqueza:{d:"Buenas perspectivas económicas a futuro.", i:"Desánimo económico pasajero, no pierdas la fe."},
     vida:{d:"Esperanza e inspiración iluminan tu camino.", i:"Desmotivación pasajera, la luz va a volver."}},
-  {n:"XVIII", nombre:"La Luna", simbolo:"🌛",
+  {n:"XVIII", nombre:"La Luna", img:"cartas del tarot/18_la_luna.jpg.png", simbolo:"🌛",
     amor:{d:"Cuidado con ilusiones o malentendidos.", i:"Los miedos y confusiones se están por aclarar."},
     riqueza:{d:"No todo es lo que parece, informate bien.", i:"Confusión en tus cuentas, revisá con calma."},
     vida:{d:"Confiá en tu intuición aunque el camino sea incierto.", i:"La confusión está cediendo, la claridad se acerca."}},
-  {n:"XIX", nombre:"El Sol", simbolo:"☀️",
+  {n:"XIX", nombre:"El Sol", img:"cartas del tarot/19_el_sol.jpg.jpg", simbolo:"☀️",
     amor:{d:"Felicidad plena y vitalidad en la relación.", i:"Alegría que tarda en llegar, pequeños obstáculos pasajeros."},
     riqueza:{d:"Éxito y buenos resultados económicos.", i:"Resultados económicos que tardan pero llegan."},
     vida:{d:"Alegría, éxito y claridad te acompañan.", i:"Optimismo frágil, mantené la confianza aunque cueste."}},
-  {n:"XX", nombre:"El Juicio", simbolo:"📯",
+  {n:"XX", nombre:"El Juicio", img:"cartas del tarot/20_el_juicio.jpg.jpg", simbolo:"📯",
     amor:{d:"Una segunda oportunidad o llamado del corazón.", i:"Culpas del pasado que conviene soltar para avanzar."},
     riqueza:{d:"Un proyecto económico renace con fuerza.", i:"Dudas sobre decisiones económicas pasadas."},
     vida:{d:"Un despertar interior te invita a algo nuevo.", i:"Dudas sobre el pasado que no te dejan avanzar."}},
-  {n:"XXI", nombre:"El Mundo", simbolo:"🌍",
+  {n:"XXI", nombre:"El Mundo", img:"cartas del tarot/21_el_mundo.jpg.jpg", simbolo:"🌍",
     amor:{d:"Plenitud y cierre exitoso en el amor.", i:"Metas inconclusas, algo falta cerrarse en la relación."},
     riqueza:{d:"Cierre exitoso de una meta económica.", i:"Una meta económica que quedó a mitad de camino."},
     vida:{d:"Cierre de una etapa con gran sensación de logro.", i:"Demoras finales, ya casi llegás a la meta."}}
 ];
 
 const EMOJI_TEMA = {amor:"💗", riqueza:"💰", vida:"🌟"};
+const CARTAS_CON_IMAGEN = CARTAS_TIRADA.filter(c => c.img);
 
 function tirar(categoria){
-  const carta = CARTAS_TIRADA[Math.floor(Math.random() * CARTAS_TIRADA.length)];
+  const carta = CARTAS_CON_IMAGEN[Math.floor(Math.random() * CARTAS_CON_IMAGEN.length)];
   const invertida = Math.random() < 0.5;
   const estado = invertida ? 'i' : 'd';
 
   const resultado = document.getElementById('resultado-tirada');
   const visual = document.getElementById('carta-visual');
 
-  document.getElementById('carta-numeral').textContent = carta.n;
-  document.getElementById('carta-numeral2').textContent = carta.n;
-  document.getElementById('carta-simbolo').textContent = carta.simbolo;
+  const img = document.getElementById('carta-img');
+  img.src = encodeURI(carta.img);
+  img.alt = carta.nombre;
   visual.classList.toggle('invertida', invertida);
 
   document.getElementById('carta-nombre').textContent = EMOJI_TEMA[categoria] + ' ' + carta.nombre;
