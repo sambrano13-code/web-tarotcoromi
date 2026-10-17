@@ -97,6 +97,55 @@
   .legal-box p{margin:0 0 8px;}
   .legal-disclaimer{font-size:11.5px; background:#f7f2ff; border:1px solid var(--border); border-radius:10px;
     padding:12px 14px; margin-bottom:20px; color:var(--text-dim);}
+
+  /* ===== Tienda de e-books ===== */
+  .pasos-tienda{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:0 auto 26px; max-width:620px;}
+  .pasos-tienda span{font-size:12.5px; color:var(--text-dim); background:#f7f2ff; border:1px solid var(--border);
+    border-radius:20px; padding:7px 14px;}
+  .pasos-tienda b{color:var(--violet-deep);}
+  .ebook-card{display:flex; gap:18px; align-items:stretch;}
+  .ebook-cover{flex:0 0 112px; border-radius:10px; padding:14px 8px; text-align:center; color:#fff;
+    background:linear-gradient(160deg,#8a5cf6,#6b3fd4 60%,#4d2aa8); display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px; box-shadow:0 6px 16px #6b3fd433; border:2px solid #c9a9f5;}
+  .ebook-cover .ec-star{font-size:14px; color:#e9defc;}
+  .ebook-cover .ec-title{font-family:'Cinzel',serif; font-weight:700; font-size:13px; line-height:1.25; letter-spacing:.4px;}
+  .ebook-cover .ec-by{font-size:8.5px; letter-spacing:1px; text-transform:uppercase; color:#e9defc; margin-top:4px;}
+  .ebook-body{flex:1; min-width:0;}
+  .ebook-body h3{margin:0 0 4px; font-size:17px;}
+  .ebook-meta{font-size:11.5px; color:var(--violet); font-weight:700; letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px;}
+  .ebook-body ul{margin:0 0 12px; padding-left:18px; font-size:13.5px; color:var(--text);}
+  .ebook-body li{margin-bottom:3px;}
+  .ebook-foot{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+  .ebook-precio{font-family:'Cinzel',serif; font-weight:700; font-size:22px; color:var(--violet-deep);}
+  .btn-add{background:#fff; border:1.5px solid var(--violet); color:var(--violet-deep); font-weight:700;
+    padding:10px 20px; border-radius:24px; font-size:14px; cursor:pointer; font-family:inherit;}
+  .btn-add:hover{background:#f2ecff;}
+  .btn-add.on{background:var(--violet); color:#fff;}
+  .ebooks-lista{display:grid; gap:18px;}
+  #tu-pedido{margin-top:26px;}
+  #tu-pedido h3{margin:0 0 10px; font-size:18px;}
+  .ped-item{display:flex; justify-content:space-between; gap:10px; font-size:14px; padding:6px 0; border-bottom:1px dashed var(--border);}
+  .ped-total{display:flex; justify-content:space-between; font-weight:700; font-size:16px; color:var(--violet-deep); padding:12px 0 4px;}
+  .ped-vacio{font-size:13.5px; color:var(--text-dim); text-align:center; margin:0;}
+  #form-tienda label.fl{display:block; font-size:13px; font-weight:700; color:var(--violet-deep); margin:14px 0 5px;}
+  #form-tienda input[type=text]{width:100%; padding:10px 12px; border-radius:8px; border:1.5px solid var(--border);
+    font-family:inherit; font-size:14px; color:var(--text); background:#fff;}
+  #form-tienda .check-line{display:flex; gap:8px; align-items:flex-start; margin-top:14px; font-size:12.5px; color:var(--text-dim);}
+  #form-tienda .check-line input{margin-top:3px;}
+  #form-tienda .check-line a{color:var(--violet-deep);}
+  .msg-tienda{font-size:13px; border-radius:10px; padding:12px 14px; margin-top:14px; line-height:1.55;}
+  .msg-error{background:#fff4f4; border:1px solid #f0c4c4; color:#7a3a3a;}
+  .pago-box{background:#f7f2ff; border:1px solid var(--lila); border-radius:12px; padding:16px 18px; margin:14px 0;}
+  .pago-box .fila{display:flex; justify-content:space-between; gap:10px; align-items:center; font-size:14px; padding:5px 0;}
+  .pago-box .fila b{color:var(--violet-deep);}
+  .pago-box .monto{font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:var(--violet-deep);}
+  .btn-mini{background:#fff; border:1px solid var(--violet); color:var(--violet-deep); border-radius:14px;
+    font-size:12px; padding:4px 10px; cursor:pointer; font-family:inherit;}
+  .pasos-pago{margin:14px 0 4px; padding-left:20px; font-size:14px;}
+  .pasos-pago li{margin-bottom:6px;}
+  section{scroll-margin-top:150px;}
+  #pedido-contenido{scroll-margin-top:150px;}
+  @media (max-width:480px){ .ebook-card{flex-direction:column;} .ebook-cover{flex-basis:auto; flex-direction:row; justify-content:flex-start; padding:12px 16px; gap:12px;} }
 </style>
 </head>
 <body>
@@ -113,6 +162,7 @@
   <a href="#tirada">Tirada al Azar</a>
   <a href="#banos">Baños Rituales</a>
   <a href="#fechas">Rituales por Fecha</a>
+  <a href="#ebooks">E-books</a>
   <a href="#pedido">Hacer un Pedido</a>
   <a href="#agendar">Agendar Lectura</a>
 </nav>
@@ -156,7 +206,7 @@
         </ul>
         <div class="label">Cómo hacerlo</div>
         <ol>
-          <li>Herví agua o leche con la canela 5 minutos y dejá entibiar.</li>
+          <li>Herví agua con la canela 5 minutos y dejá entibiar.</li>
           <li>Agregá los pétalos y la miel.</li>
           <li>Volcalo de los hombros hacia abajo después de tu ducha habitual, en luna creciente.</li>
         </ol>
@@ -191,7 +241,7 @@
         <ol>
           <li>Herví el romero, colá y dejá entibiar.</li>
           <li>Disolvé la sal en el agua tibia.</li>
-          <li>Volcalo de la cabeza a los pies, de atrás hacia adelante, después de bañarte.</li>
+          <li>Volcalo de los pies a la cabeza, de atrás hacia adelante, después de bañarte.</li>
         </ol>
       </div>
 
@@ -212,7 +262,7 @@
       </div>
 
     </div>
-    <p class="note"> ATTENCION🚨Estos baños son prácticas simbólicas de tradición popular, no reemplazan tratamientos médicos. Evitá aplicarlos sobre heridas o piel irritada, y probá siempre una pequeña cantidad de hierbas antes si tenés piel sensible.</p>
+    <p class="note">Estos baños son prácticas simbólicas de tradición popular, no reemplazan tratamientos médicos. Evitá aplicarlos sobre heridas o piel irritada, y probá siempre una pequeña cantidad de hierbas antes si tenés piel sensible.</p>
   </section>
 
   <section id="fechas">
@@ -253,6 +303,27 @@
     </div>
   </section>
 
+  
+  <section id="ebooks">
+    <h2>📚 Tienda de E-books</h2>
+    <div class="divider">✦ ⋆ ✦</div>
+    <p style="text-align:center; color:var(--text-dim); font-size:14px; max-width:520px; margin:0 auto 18px;">
+      Guías digitales de Tarot con Romi para descargar y usar a tu ritmo. Elegí los que quieras y armá tu pedido acá mismo.
+    </p>
+    <div class="pasos-tienda">
+      <span><b>1</b> · Elegí tus e-books</span>
+      <span><b>2</b> · Completá tus datos</span>
+      <span><b>3</b> · Pagá y recibilos</span>
+    </div>
+
+    <div class="ebooks-lista" id="ebooks-lista"></div>
+
+    <div class="card" id="tu-pedido">
+      <h3>🛒 Tu pedido</h3>
+      <div id="pedido-contenido"></div>
+    </div>
+  </section>
+
   <section id="pedido">
     <h2>📝 Hacer un Pedido</h2>
     <div class="divider">✦ ⋆ ✦</div>
@@ -269,7 +340,9 @@
         <select id="f-producto" name="producto" required>
           <option value="">Elegí una opción</option>
           <option>Lectura de Tarot</option>
-          <option>E-books</option>
+          <option>E-book</option>
+          <option>Kit de Baño Ritual</option>
+          <option>Vela Intencionada</option>
           <option>Otro</option>
         </select>
 
@@ -295,8 +368,8 @@
       <p class="legal-disclaimer">Este texto es una guía general para tu emprendimiento y no reemplaza el asesoramiento de un abogado. Si querés asegurarte el cumplimiento total de la normativa vigente en Argentina, te recomendamos hacerlo revisar por un profesional.</p>
 
       <h3>Términos y Condiciones</h3>
-      <p>Tarot con Romi ofrece lecturas de tarot y e-books con fines orientativos y de acompañamiento personal. No reemplazan el asesoramiento médico, psicológico, legal ni financiero profesional.</p>
-      <p>Los pagos se coordinan por WhatsApp. Los productos digitales (e-books) se entregan por email o WhatsApp una vez confirmado el pago, y al ser de entrega inmediata no admiten reembolso salvo error atribuible a Tarot con Romi.</p>
+      <p>Tarot con Romi ofrece lecturas de tarot, e-books y productos rituales (baños, velas) con fines orientativos y de acompañamiento personal. No reemplazan el asesoramiento médico, psicológico, legal ni financiero profesional.</p>
+      <p>Los pagos se coordinan por WhatsApp o Mercado Pago. Los productos digitales (e-books) se entregan por email o WhatsApp una vez confirmado el pago, y al ser de entrega inmediata no admiten reembolso salvo error atribuible a Tarot con Romi. Los e-books son para uso personal: no está permitido revenderlos ni compartirlos.</p>
       <p>Los precios pueden actualizarse sin previo aviso. El uso de este sitio implica la aceptación de estos términos.</p>
 
       <h3>Política de Privacidad</h3>
@@ -437,6 +510,159 @@ function tirar(categoria){
   resultado.classList.add('reveal');
   resultado.scrollIntoView({behavior:'smooth', block:'center'});
 }
+</script>
+
+<script>
+/* ===== Tienda de e-books =====
+   EDITÁ ACÁ los precios y tus datos de pago. Todo lo demás funciona solo. */
+const TIENDA = {
+  whatsapp: "5493541290336",
+  pago: {
+    alias: "TarotconRomi",
+    titular: "Romina Sambrano",
+    medio: "Mercado Pago (pesos argentinos)"
+    Numero de cuenta: "15595292"
+    alias: "Tarotconromi"
+    titular: "Romina Sambrano",
+    medio: "Prex (chileno, colombiano, mexicano, dolares)"
+  },
+  ebooks: [
+    { id: "arcanos", titulo: "Arcanos Mayores", paginas: 90, precio: 15000, etiqueta: "PDF · 90 páginas",
+      puntos: ["Los 22 arcanos del tarot Rider-Waite, uno por uno", "Significado al derecho y al revés", "Amor, trabajo, espiritualidad, prácticas y arquetipos"] },
+    { id: "banos", titulo: "Baños Rituales", paginas: 56, precio: 8000, etiqueta: "PDF · 56 páginas",
+      puntos: ["20 baños en 5 categorías", "Ingredientes con cantidades y paso a paso", "Glosario, días de la semana y fases lunares"] },
+    { id: "planner", titulo: "Diario de Manifestacion y Planner_tarotconromi", paginas: 297, precio: 22000, etiqueta: "PDF imprimible · 297 páginas",
+      puntos: ["Agenda perpetua: sirve para cualquier año", "12 meses con rituales de luna nueva y llena", "26 semanas, 31 días, hábitos y gratitud"] }
+  ]
+};
+
+(function(){
+  const sel = new Set();
+  const $ = (id) => document.getElementById(id);
+  const money = (n) => "$" + n.toLocaleString("es-AR");
+  const byId = (id) => TIENDA.ebooks.find(e => e.id === id);
+  const total = () => [...sel].reduce((s, id) => s + byId(id).precio, 0);
+  const resumenTexto = () => [...sel].map(id => "• " + byId(id).titulo + " (" + money(byId(id).precio) + ")").join("\n");
+  const esc = (s) => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+
+  function renderCards(){
+    $("ebooks-lista").innerHTML = TIENDA.ebooks.map(e => `
+      <div class="card ebook-card">
+        <div class="ebook-cover"><span class="ec-star">✦</span><span class="ec-title">${esc(e.titulo)}</span><span class="ec-by">Tarot con Romi</span></div>
+        <div class="ebook-body">
+          <h3>${esc(e.titulo)}</h3>
+          <div class="ebook-meta">${esc(e.etiqueta)}</div>
+          <ul>${e.puntos.map(p => "<li>" + esc(p) + "</li>").join("")}</ul>
+          <div class="ebook-foot">
+            <span class="ebook-precio">${money(e.precio)}</span>
+            <button type="button" class="btn-add ${sel.has(e.id) ? "on" : ""}" data-id="${e.id}">${sel.has(e.id) ? "✓ Agregado" : "Agregar al pedido"}</button>
+          </div>
+        </div>
+      </div>`).join("");
+    document.querySelectorAll(".btn-add").forEach(b => b.addEventListener("click", () => {
+      const id = b.dataset.id;
+      sel.has(id) ? sel.delete(id) : sel.add(id);
+      renderCards(); renderPedido();
+    }));
+  }
+
+  function renderPedido(){
+    const box = $("pedido-contenido");
+    if (!sel.size){
+      box.innerHTML = '<p class="ped-vacio">Todavía no elegiste ningún e-book. Tocá “Agregar al pedido” en el que quieras.</p>';
+      return;
+    }
+    box.innerHTML = `
+      ${[...sel].map(id => `<div class="ped-item"><span>${esc(byId(id).titulo)}</span><span>${money(byId(id).precio)}</span></div>`).join("")}
+      <div class="ped-total"><span>Total</span><span>${money(total())}</span></div>
+      <form id="form-tienda" novalidate>
+        <label class="fl" for="t-nombre">Tu nombre</label>
+        <input id="t-nombre" name="nombre" type="text" autocomplete="name" required>
+        <label class="fl" for="t-contacto">Tu WhatsApp o email (te mandamos los e-books ahí)</label>
+        <input id="t-contacto" name="contacto" type="text" autocomplete="email" required>
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
+        <div class="check-line">
+          <input id="t-acepto" type="checkbox" required>
+          <label for="t-acepto" style="display:inline; font-weight:400; margin:0;">Acepto los <a href="#legal">Términos y Condiciones y la Política de Privacidad</a>.</label>
+        </div>
+        <div id="t-error"></div>
+        <button class="btn" id="t-enviar" type="submit" style="margin:16px 0 0;">Confirmar pedido</button>
+      </form>`;
+    $("form-tienda").addEventListener("submit", enviar);
+  }
+
+  function waLink(nombre){
+    const msg = "Hola Romi! Hice un pedido de e-books:\n" + resumenTexto() + "\nTotal: " + money(total()) +
+                "\nMi nombre: " + nombre + "\nTe paso el comprobante de pago.";
+    return "https://wa.me/" + TIENDA.whatsapp + "?text=" + encodeURIComponent(msg);
+  }
+
+  async function enviar(ev){
+    ev.preventDefault();
+    const nombre = $("t-nombre").value.trim();
+    const contacto = $("t-contacto").value.trim();
+    const err = $("t-error");
+    err.innerHTML = "";
+    if (!nombre || !contacto || !$("t-acepto").checked){
+      err.innerHTML = '<div class="msg-tienda msg-error">Completá tu nombre, tu contacto y aceptá los términos para confirmar el pedido.</div>';
+      return;
+    }
+    const btn = $("t-enviar");
+    btn.disabled = true; btn.textContent = "Enviando…";
+
+    const pedidoForm = document.querySelector("form.pedido");
+    const endpoint = pedidoForm ? pedidoForm.getAttribute("action") : "";
+    const configurado = endpoint && endpoint.indexOf("PEGAR_TU_ID") === -1;
+    let enviado = false;
+    if (configurado){
+      try {
+        const fd = new FormData();
+        fd.append("_subject", "Pedido de e-books — Tarot con Romi");
+        fd.append("nombre", nombre);
+        fd.append("contacto", contacto);
+        fd.append("ebooks", [...sel].map(id => byId(id).titulo).join(" + "));
+        fd.append("total", money(total()));
+        fd.append("_gotcha", "");
+        const r = await fetch(endpoint, { method: "POST", body: fd, headers: { "Accept": "application/json" } });
+        enviado = r.ok;
+      } catch (e) { enviado = false; }
+    }
+    if (enviado){ mostrarPago(nombre, true); }
+    else {
+      mostrarPago(nombre, false);
+    }
+  }
+
+  function mostrarPago(nombre, registrado){
+    const t = total();
+    $("pedido-contenido").innerHTML = `
+      <h3 style="color:var(--violet-deep);">${registrado ? "¡Pedido recibido, " + esc(nombre) + "! ✨" : "Último paso, " + esc(nombre) + " ✨"}</h3>
+      ${registrado ? "" : '<div class="msg-tienda msg-error" style="margin-top:0">No pudimos registrar tu pedido automáticamente. No pasa nada: seguí los pasos de abajo y mandanos el detalle por WhatsApp para que quede anotado.</div>'}
+      <div class="pago-box">
+        ${[...sel].map(id => `<div class="fila"><span>${esc(byId(id).titulo)}</span><span>${money(byId(id).precio)}</span></div>`).join("")}
+        <div class="fila" style="border-top:1px dashed var(--lila); margin-top:6px; padding-top:10px;"><b>Total a transferir</b><span class="monto">${money(t)}</span></div>
+        <div class="fila"><span>Alias</span><span><b id="alias-txt">${esc(TIENDA.pago.alias)}</b> <button type="button" class="btn-mini" id="copiar-alias">Copiar</button></span></div>
+        <div class="fila"><span>Titular</span><b>${esc(TIENDA.pago.titular)}</b></div>
+        <div class="fila"><span>Medio</span><span>${esc(TIENDA.pago.medio)}</span></div>
+      </div>
+      <ol class="pasos-pago">
+        <li>Transferí <b>${money(t)}</b> al alias de arriba.</li>
+        <li>Mandanos el comprobante por WhatsApp con el botón de abajo.</li>
+        <li>Apenas confirmemos tu pago, te enviamos tus e-books por WhatsApp o email.</li>
+      </ol>
+      <div style="text-align:center; margin-top:14px;">
+        <a class="btn whatsapp" href="${waLink(nombre)}" target="_blank" rel="noopener">💬 Enviar comprobante por WhatsApp</a>
+        <div><button type="button" class="btn-mini" id="otro-pedido" style="margin-top:10px;">Hacer otro pedido</button></div>
+      </div>`;
+    $("copiar-alias").addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(TIENDA.pago.alias); $("copiar-alias").textContent = "¡Copiado!"; } catch(e){ $("copiar-alias").textContent = "Copialo a mano"; }
+    });
+    $("otro-pedido").addEventListener("click", () => { sel.clear(); renderCards(); renderPedido(); });
+    $("pedido-contenido").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  renderCards(); renderPedido();
+})();
 </script>
 </body>
 </html>
