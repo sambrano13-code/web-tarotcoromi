@@ -1,65 +1,94 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tarot con Romi — Rituales y Baños</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#ffffff; --bg2:#f7f2ff; --card:#faf7ffcc; --violet:#8a5cf6; --lila:#c9a9f5;
-    --violet-deep:#6b3fd4; --text:#3a2a55; --text-dim:#7a6a99; --border:#e2d4fb;
+<script>
+/* ===== Tienda de e-books =====
+   Los precios REALES se definen en el backend (Code.gs); estos son solo para mostrar mientras carga.
+   Pegá abajo la URL que te da Google Apps Script al implementar (termina en /exec). */
+const TIENDA = {
+  whatsapp: "5493541290336",
+  backend: "PEGAR_URL_DE_APPS_SCRIPT",
+  prex: { alias: "Tarotconromi", titular: "Romina Sambrano" },
+  ebooks: [
+    { id: "arcanos", titulo: "Lectura de Arcanos Mayores", precios: {ARS:15000, USD:10, CLP:9800, UYU:400, MXN:183, COP:32000}, etiqueta: "PDF · 90 páginas",
+      puntos: ["Los 22 arcanos del tarot Rider-Waite, uno por uno", "Significado al derecho y al revés", "Amor, trabajo, espiritualidad, prácticas y arquetipos"] },
+    { id: "banos", titulo: "Baños Rituales", precios: {ARS:8000, USD:6, CLP:5200, UYU:215, MXN:98, COP:17000}, etiqueta: "PDF · 117 páginas",
+      puntos: ["20 baños en 5 categorías", "Ingredientes con cantidades y paso a paso", "Glosario, días de la semana y fases lunares"] },
+    { id: "planner", titulo: "Diario de Manifestación & Planner", precios: {ARS:22000, USD:15, CLP:14300, UYU:585, MXN:269, COP:47000}, etiqueta: "PDF imprimible · 297 páginas",
+      puntos: ["Agenda perpetua: sirve para cualquier año", "12 meses con rituales de luna nueva y llena", "26 semanas, 31 días, hábitos y gratitud"] }
+  ]
+};
+
+(function(){
+  const sel = new Set();
+  let moneda = "ARS", paypalId = "", paypalOk = false, retorno = false;
+  const $ = (id) => document.getElementById(id);
+  const backendOk = () => TIENDA.backend && TIENDA.backend.indexOf("PEGAR_") === -1;
+  const DEMO = !backendOk();            // sin backend: modo demostración (nada se cobra ni se envía)
+  if (DEMO) paypalOk = true;
+  const MONEDAS = {
+    ARS: { n: "Pesos argentinos", f: "🇦🇷", s: "$" }, USD: { n: "Dólares", f: "🌎", s: "US$" },
+    CLP: { n: "Pesos chilenos", f: "🇨🇱", s: "CLP $" }, UYU: { n: "Pesos uruguayos", f: "🇺🇾", s: "UYU $" },
+    MXN: { n: "Pesos mexicanos", f: "🇲🇽", s: "MXN $" }, COP: { n: "Pesos colombianos", f: "🇨🇴", s: "COP $" }
+  };
+  const fmt = (n, m) => MONEDAS[m].s + n.toLocaleString("es-AR");
+  const byId = (id) => TIENDA.ebooks.find(e => e.id === id);
+  const precio = (e) => fmt(e.precios[moneda], moneda);
+  const total = () => [...sel].reduce((t, id) => t + byId(id).precios[moneda], 0);
+  const totalTxt = () => fmt(total(), moneda);
+  const esc = (s) => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+
+  async function api(payload){
+    if (DEMO){
+      await new Promise(r => setTimeout(r, 500));
+      if (payload.action === "createPrex") return { ok: true, pedido: "DEMO-001", monto: total(), moneda: payload.moneda, alias: TIENDA.prex.alias, titular: TIENDA.prex.titular };
+      if (payload.action === "createPayPal") return { ok: true, pedido: "DEMO-001", orderID: "DEMO" };
+      if (payload.action === "capturePayPal") return { ok: true, pedido: "DEMO-001" };
+    }
+    const r = await fetch(TIENDA.backend, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || "Ocurrió un error. Probá de nuevo.");
+    return j;
   }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth; scroll-padding-top:env(safe-area-inset-top,0px);}
-  body{
-    margin:0; font-family:'Nunito Sans',system-ui,sans-serif; color:var(--text);
-    background:linear-gradient(180deg, var(--bg2), var(--bg) 400px);
-    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
-    min-height:100%;
+
+  function renderCards(){
+    $("ebooks-lista").innerHTML = TIENDA.ebooks.map(e => `
+      <div class="card ebook-card">
+        <div class="ebook-cover"><span class="ec-star">✦</span><span class="ec-title">${esc(e.titulo)}</span><span class="ec-by">Tarot con Romi</span></div>
+        <div class="ebook-body">
+          <h3>${esc(e.titulo)}</h3>
+          <div class="ebook-meta">${esc(e.etiqueta)}</div>
+          <ul>${e.puntos.map(p => "<li>" + esc(p) + "</li>").join("")}</ul>
+          <div style="font-size:12px; color:var(--text-dim); margin:6px 0 2px; line-height:1.6;">${["USD","CLP","UYU","MXN","COP"].map(m => fmt(e.precios[m], m)).join(" · ")}</div>
+          <div class="ebook-foot">
+            <span class="ebook-precio">${fmt(e.precios.ARS,"ARS")}</span>
+            <button type="button" class="btn-add ${sel.has(e.id) ? "on" : ""}" data-id="${e.id}">${sel.has(e.id) ? "✓ Agregado" : "Agregar al pedido"}</button>
+          </div>
+        </div>
+      </div>`).join("");
+    document.querySelectorAll(".btn-add").forEach(b => b.addEventListener("click", () => {
+      const id = b.dataset.id;
+      sel.has(id) ? sel.delete(id) : sel.add(id);
+      renderCards(); renderPedido();
+    }));
   }
-  h1,h2,h3{font-family:'Cinzel',serif; letter-spacing:.5px; color:var(--violet-deep); margin:0 0 .4em;}
-  .stars{position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:
-      radial-gradient(1.5px 1.5px at 20% 30%, #8a5cf655, transparent),
-      radial-gradient(1.5px 1.5px at 70% 60%, #c9a9f555, transparent),
-      radial-gradient(2px 2px at 40% 80%, #8a5cf644, transparent),
-      radial-gradient(1.5px 1.5px at 90% 20%, #c9a9f555, transparent),
-      radial-gradient(1.5px 1.5px at 55% 10%, #8a5cf644, transparent),
-      radial-gradient(2px 2px at 10% 65%, #c9a9f555, transparent);
-    background-repeat:repeat; background-size:600px 600px;
+
+  function datos(){
+    return { nombre: ($("t-nombre").value || "").trim(), email: ($("t-email").value || "").trim(),
+             ok: $("t-acepto").checked, items: [...sel] };
   }
-  header{position:relative; z-index:1; text-align:center; padding:48px 20px 24px;}
-  .foto-wrap{width:150px; height:150px; margin:0 auto 18px; border-radius:50%;
-    padding:4px; background:linear-gradient(135deg, var(--violet), var(--lila));
+  function validar(){
+    const d = datos();
+    if (d.nombre.length < 2) return "Escribí tu nombre.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) return "Revisá tu email: ahí te mandamos los e-books.";
+    if (!d.ok) return "Aceptá los términos y la política de privacidad para continuar.";
+    return "";
   }
-  .foto-wrap img{width:100%; height:100%; border-radius:50%; object-fit:cover; display:block; border:4px solid #fff;}
-  header h1{font-size:clamp(28px,6vw,42px);}
-  header p{color:var(--text-dim); max-width:520px; margin:10px auto 0; font-size:15px;}
-  nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; display:flex; gap:6px;
-    justify-content:center; flex-wrap:wrap; padding:10px; background:#ffffffdd; backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--border);
-  }
-  nav a{color:var(--violet-deep); text-decoration:none; font-size:13px; padding:8px 14px;
-    border:1px solid var(--lila); border-radius:20px; white-space:nowrap;}
-  nav a:hover{background:#f2ecff;}
-  main{position:relative; z-index:1; max-width:760px; margin:0 auto; padding:30px 18px 70px;}
-  section{margin-bottom:52px; scroll-margin-top:150px;}
-  section > h2{text-align:center; font-size:clamp(22px,4vw,30px); margin-bottom:6px;}
-  .divider{text-align:center; color:var(--lila); margin-bottom:26px; font-size:14px;}
-  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px;}
-  .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px 22px;
-    box-shadow:0 4px 18px #8a5cf614;}
-  .card h3{font-size:17px; display:flex; align-items:center; gap:8px; color:var(--violet-deep);}
-  .card p.desc{color:var(--text-dim); font-size:14px; margin:0 0 12px;}
-  .btn{display:inline-block; background:var(--violet); color:#fff; font-weight:700; text-decoration:none;
-    padding:14px 30px; border-radius:30px; font-size:15px; margin:6px; box-shadow:0 4px 14px #8a5cf655;}
-  .btn.whatsapp{background:#25D366; box-shadow:0 4px 14px #25d36655;}
-  footer{position:relative; z-index:1; text-align:center; padding:24px; color:var(--text-dim); font-size:12px;}
-  
-  /* Tirada de Tarot */
-  .tirada-botones{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;}
-  .btn-tirada{background:#fff; border:1.5px solid var(--violet); color:var(--violet-deep); font-weight:700;
-    padding:12px 22px; border-radius:24px; font-size:14px; cursor:pointer; font-family:
+  const showErr = (m) => { $("t-error").innerHTML = m ? '<div class="msg-tienda msg-error">' + esc(m) + '</div>' : ""; };
+
+  function renderPedido(){
+    const box = $("pedido-contenido");
+    if (!sel.size){
+      box.innerHTML = '<p class="ped-vacio">Todavía no elegiste ningún e-book. Tocá “Agregar al pedido” en el que quieras.</p>';
+      return;
+    }
+    box.innerHTML = `
+      ${[...sel].map(id => `<div class="ped-item"><span>${esc(byId(id).titulo)}</span><span>${precio(byId(id))}</span></div>`).join("")}
+      <div class="ped-total"><span>Total</span><span>${totalTxt()}</span></di
