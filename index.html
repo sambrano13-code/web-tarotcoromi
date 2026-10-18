@@ -536,7 +536,9 @@ const TIENDA = {
   let moneda = "ARS", paypalId = "", paypalOk = false, retorno = false;
   const $ = (id) => document.getElementById(id);
   const backendOk = () => TIENDA.backend && TIENDA.backend.indexOf("PEGAR_") === -1;
-  const DEMO = !backendOk();            // sin backend: modo demostración (nada se cobra ni se envía)
+  // La demostración SOLO se activa a propósito (abriendo la página con ?demo=1) y nunca en la página pública.
+  const DEMO = !backendOk() && /[?&]demo=1/.test(location.search);
+  const SIN_PAGOS = !backendOk() && !DEMO;   // pagos todavía sin configurar: no se puede "pagar"
   if (DEMO) paypalOk = true;
   const MONEDAS = {
     ARS: { n: "Pesos argentinos", f: "🇦🇷", s: "$" }, USD: { n: "Dólares", f: "🌎", s: "US$" },
@@ -604,7 +606,16 @@ const TIENDA = {
       box.innerHTML = '<p class="ped-vacio">Todavía no elegiste ningún e-book. Tocá “Agregar al pedido” en el que quieras.</p>';
       return;
     }
-        box.innerHTML = `
+        if (SIN_PAGOS){
+      const wa = "https://wa.me/" + TIENDA.whatsapp + "?text=" + encodeURIComponent("Hola Romi! Quiero comprar: " + [...sel].map(id => byId(id).titulo).join(" + "));
+      box.innerHTML = `
+        ${[...sel].map(id => `<div class="ped-item"><span>${esc(byId(id).titulo)}</span><span>${precio(byId(id))}</span></div>`).join("")}
+        <div class="ped-total"><span>Total</span><span>${totalTxt()}</span></div>
+        <div class="msg-tienda msg-error" style="margin-top:12px;">El pago online todavía no está habilitado. Por ahora escribinos por WhatsApp y coordinamos tu compra.</div>
+        <div style="text-align:center; margin-top:12px;"><a class="btn whatsapp" href="${wa}" target="_blank" rel="noopener">💬 Pedir por WhatsApp</a></div>`;
+      return;
+    }
+    box.innerHTML = `
       ${[...sel].map(id => `<div class="ped-item"><span>${esc(byId(id).titulo)}</span><span>${precio(byId(id))}</span></div>`).join("")}
       <div class="ped-total"><span>Total</span><span>${totalTxt()}</span></div>
       <label class="fl" for="t-moneda">Moneda en la que querés pagar</label>
@@ -708,7 +719,8 @@ const TIENDA = {
 
   function mostrarListo(pedido){
     $("pedido-contenido").innerHTML = `
-      <h3 style="color:var(--violet-deep);">¡Pago recibido! ✨</h3>
+      ${DEMO ? '<div class="msg-tienda msg-error" style="margin-bottom:10px;"><b>DEMOSTRACIÓN:</b> no se realizó ningún pago ni se envió ningún e-book.</div>' : ""}
+      <h3 style="color:var(--violet-deep);">${DEMO ? "Así se vería la confirmación" : "¡Pago recibido! ✨"}</h3>
       <p>Te estamos enviando tus e-books por email (pedido <b>${esc(pedido || "")}</b>). Suele llegar en pocos minutos; revisá también la carpeta de spam o promociones.</p>
       <p style="font-size:13px; color:var(--text-dim);">Si en 30 minutos no llegó, escribinos por WhatsApp con el email que usaste.</p>
       <div style="text-align:center; margin-top:10px;"><button type="button" class="btn-mini" id="otro-pedido">Hacer otro pedido</button></div>`;
